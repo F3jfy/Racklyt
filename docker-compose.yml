@@ -11,6 +11,7 @@ services:
       - "8088:8088"
     environment:
       - RACKLYT_HOST=0.0.0.0
+      - PORT=8088
       - RACKLYT_PORT=8088
       - RACKLYT_DB_PATH=/data/racklyt.db
       - RACKLYT_WEB_DIST=/app/web/dist
