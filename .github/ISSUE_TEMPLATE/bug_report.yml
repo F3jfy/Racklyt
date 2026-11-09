@@ -1,0 +1,88 @@
+name: 🐛 Bug Report
+description: File a bug report to help us improve Racklyt
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an issue!
+        Please ensure you do not share sensitive credentials, private IPs, or API keys in this report.
+        For security vulnerabilities, please refer to [SECURITY.md](https://github.com/racklyt/racklyt/blob/main/SECURITY.md).
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues and verified this is not a duplicate.
+          required: true
+        - label: I am running a supported version of Racklyt.
+          required: true
+        - label: This is NOT a security vulnerability (see SECURITY.md).
+          required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component
+      description: Which part of Racklyt is experiencing the problem?
+      options:
+        - "Hub (Backend / Axum / SQLite)"
+        - "Agent (Daemon / Metric Poller)"
+        - "Web Dashboard (React UI)"
+        - "Proxmox VE Poller"
+        - "Alerting / Dispatchers"
+        - "Docker / Deployment"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of the Bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the behavior.
+      placeholder: |
+        1. Start hub with '...'
+        2. Enroll agent on host '...'
+        3. Navigate to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output & Error Messages
+      description: Please copy and paste any relevant logs from `racklyt-hub` or `racklyt-agent` (sanitize secrets/IPs).
+      render: shell
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment Information
+      description: Please provide your host environment details.
+      placeholder: |
+        - OS: [e.g. Debian 12 / Ubuntu 24.04 / Proxmox VE 8.2 / Raspberry Pi OS]
+        - Architecture: [e.g. x86_64, aarch64 (ARM64)]
+        - Kernel Version: [e.g. 6.8.0]
+        - Racklyt Version: [e.g. 0.1.0 or git commit sha]
+        - Browser (if UI issue): [e.g. Firefox 130, Chrome 128]
+    validations:
+      required: true

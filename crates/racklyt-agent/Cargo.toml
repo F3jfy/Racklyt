@@ -1,0 +1,19 @@
+[package]
+name = "racklyt-agent"
+description = "Ultra-lightweight Linux and Raspberry Pi direct-syscall telemetry agent for Racklyt"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+racklyt-common = { path = "../racklyt-common" }
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+reqwest.workspace = true
+chrono.workspace = true
+libc = "0.2"

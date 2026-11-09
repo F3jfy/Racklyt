@@ -1,0 +1,29 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/racklyt-common",
+    "crates/racklyt-hub",
+    "crates/racklyt-agent",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Racklyt Contributors"]
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/racklyt/racklyt"
+homepage = "https://racklyt.dev"
+keywords = ["monitoring", "proxmox", "raspberry-pi", "sysadmin", "infrastructure"]
+categories = ["command-line-utilities", "network-programming", "web-programming"]
+
+[workspace.dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.40", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+thiserror = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.10", features = ["v4", "serde"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }

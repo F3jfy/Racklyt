@@ -1,0 +1,55 @@
+name: 💡 Feature Request
+description: Propose a new feature, metric, or architectural enhancement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an improvement to Racklyt!
+        We prioritize features that align with our core principles: lightweight, high-performance, and security-focused.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      description: What part of the system would this feature improve?
+      options:
+        - "Agent Telemetry / Hardware Metrics"
+        - "Proxmox VE Integration"
+        - "Web Dashboard & Widgets"
+        - "Alerting & Notification Channels"
+        - "Authentication & RBAC"
+        - "Database & Retention Engine"
+        - "Packaging / Deployment (Docker, Helm, systemd)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear and concise description of the limitation or use case.
+      placeholder: "I'm always frustrated when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the Solution You'd Like
+      description: A detailed description of the feature or metric you would like added.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions Considered
+      description: Any alternative implementations or workarounds you have considered.
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any relevant mockups, hardware specifications, sysfs paths, or reference links.

@@ -1,0 +1,101 @@
+# ==============================================================================
+# Racklyt - Git Ignore Rules
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Sensitive Local Data & Databases (CRITICAL: Do NOT remove)
+# ------------------------------------------------------------------------------
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+*.sqlite
+*.sqlite3
+racklyt.db*
+/racklyt.db*
+
+# ------------------------------------------------------------------------------
+# Environment Variables & Secret Credentials
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.env
+*.token
+*.secret
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+agent.env
+agent.toml
+hub.env
+hub.toml
+
+# ------------------------------------------------------------------------------
+# Rust / Cargo Build Artifacts
+# ------------------------------------------------------------------------------
+/target/
+**/*.rs.bk
+Cargo.lock.bak
+
+# ------------------------------------------------------------------------------
+# Node.js & Frontend Build Outputs
+# ------------------------------------------------------------------------------
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Vite / Web Dist Outputs
+web/dist/
+web/dist-ssr/
+dist/
+.vite/
+*.local
+
+# ------------------------------------------------------------------------------
+# Development Scratch & Temporary Files
+# ------------------------------------------------------------------------------
+scratch/
+/scratch/
+*.log
+logs/
+*.tmp
+*.temp
+tmp/
+
+# ------------------------------------------------------------------------------
+# Operating System & IDE Artifacts
+# ------------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Vim / Emacs
+*.swp
+*.swo
+*~
+\#*\#
+.#*

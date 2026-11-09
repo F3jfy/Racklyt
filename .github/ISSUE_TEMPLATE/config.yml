@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔒 Security Vulnerability Report
+    url: https://github.com/racklyt/racklyt/security/advisories/new
+    about: Please report security vulnerabilities privately rather than creating a public issue.
+  - name: 💬 Community Discussions & Questions
+    url: https://github.com/racklyt/racklyt/discussions
+    about: Ask questions, share your dashboard setups, or discuss hardware integrations.

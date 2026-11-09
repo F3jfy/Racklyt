@@ -1,0 +1,1729 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Racklyt Dark Theme Palette */
+  --racklyt-bg-canvas: #0b0c0e;
+  --racklyt-bg-primary: #111217;
+  --racklyt-bg-panel: #181b1f;
+  --racklyt-bg-panel-hover: #1f2329;
+  --racklyt-bg-subtle: #16181d;
+  --racklyt-bg-active: #22252b;
+  --racklyt-bg-input: #090a0d;
+  --racklyt-bg-header: #141619;
+  
+  /* Racklyt Borders */
+  --racklyt-border-weak: #22252b;
+  --racklyt-border-medium: #333842;
+  --racklyt-border-strong: #464c59;
+  --racklyt-border-focus: #f99c1c;
+
+  /* Racklyt Typography Colors */
+  --racklyt-text-primary: #f0f2f5;
+  --racklyt-text-secondary: #cacedb;
+  --racklyt-text-muted: #8b93a4;
+  --racklyt-text-disabled: #525866;
+  --racklyt-text-link: #5794f2;
+
+  /* Iconic Racklyt Accents */
+  --racklyt-orange: #f99c1c;
+  --racklyt-orange-hover: #ffad33;
+  --racklyt-orange-glow: rgba(249, 156, 28, 0.25);
+  --racklyt-blue: #3274d9;
+  --racklyt-blue-hover: #4c8bed;
+  --racklyt-green: #73bf69;
+  --racklyt-green-dark: #37872d;
+  --racklyt-red: #f2495c;
+  --racklyt-yellow: #fade2a;
+  --racklyt-purple: #b877d9;
+  --racklyt-cyan: #70dbff;
+  --racklyt-teal: #00b3a4;
+
+  /* Typography & Layout */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-retro: 'Silkscreen', 'JetBrains Mono', monospace;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --panel-radius: 8px;
+  --transition-fast: 0.12s ease-in-out;
+}
+
+/* 8-Bit Retro CRT Scanlines & Pixel Styles */
+.font-pixel {
+  font-family: var(--font-pixel);
+}
+
+.font-retro {
+  font-family: var(--font-retro);
+}
+
+.crt-scanlines {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.35) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+}
+
+.pixel-border {
+  box-shadow: 
+    0 -2px 0 0 #000,
+    0 2px 0 0 #000,
+    -2px 0 0 0 #000,
+    2px 0 0 0 #000;
+}
+
+.pixel-btn-shadow {
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.9);
+}
+
+.pixel-btn-shadow:active {
+  box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.9);
+  transform: translate(3px, 3px);
+}
+
+
+*, ::before, ::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border-color: var(--racklyt-border-weak);
+}
+
+body {
+  background-color: var(--racklyt-bg-canvas);
+  color: var(--racklyt-text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure user input writing is always crisp pure white and easily readable */
+input, select, textarea {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Fix browser autofill from darkening text to gray or black */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #181b1f inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #f99c1c !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+
+/* Custom Racklyt Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--racklyt-bg-canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--racklyt-border-strong);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--racklyt-text-muted);
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ====================================================
+   1. Racklyt App Layout (Sidebar + Main Viewport)
+   ==================================================== */
+.racklyt-app-container {
+  display: flex;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: var(--racklyt-bg-canvas);
+}
+
+/* Left Slim Sidebar */
+.racklyt-sidebar {
+  width: 54px;
+  background-color: var(--racklyt-bg-header);
+  border-right: 1px solid var(--racklyt-border-weak);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  color: var(--racklyt-orange);
+  background: rgba(249, 156, 28, 0.08);
+  border: 1px solid rgba(249, 156, 28, 0.2);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sidebar-logo:hover {
+  background: rgba(249, 156, 28, 0.15);
+  box-shadow: 0 0 12px var(--racklyt-orange-glow);
+  transform: scale(1.04);
+}
+
+.sidebar-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  align-items: center;
+}
+
+.sidebar-nav-item {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--racklyt-text-muted);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition-fast);
+  background: transparent;
+  border: none;
+}
+
+.sidebar-nav-item:hover {
+  color: var(--racklyt-text-primary);
+  background-color: var(--racklyt-bg-active);
+}
+
+.sidebar-nav-item.active {
+  color: var(--racklyt-orange);
+  background-color: rgba(249, 156, 28, 0.12);
+  box-shadow: inset 0 0 12px rgba(249, 156, 28, 0.08);
+}
+
+.sidebar-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  bottom: 7px;
+  width: 3px;
+  background-color: var(--racklyt-orange);
+  border-radius: 0 3px 3px 0;
+  box-shadow: 0 0 8px var(--racklyt-orange);
+}
+
+.sidebar-divider {
+  width: 24px;
+  height: 1px;
+  background-color: var(--racklyt-border-weak);
+  margin: 6px 0;
+}
+
+.sidebar-pinned-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.sidebar-pinned-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+}
+
+.sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.sidebar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--racklyt-orange), #e02f44);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.sidebar-avatar:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 10px rgba(249, 156, 28, 0.4);
+}
+
+/* Main Dashboard Canvas */
+.racklyt-main-viewport {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* ====================================================
+   2. Racklyt Top Navbar & Breadcrumbs
+   ==================================================== */
+.racklyt-navbar {
+  height: 48px;
+  background-color: rgba(17, 18, 23, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--racklyt-border-weak);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 50;
+  flex-shrink: 0;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.racklyt-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.breadcrumb-root {
+  color: var(--racklyt-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.breadcrumb-sep {
+  color: var(--racklyt-text-disabled);
+}
+
+.breadcrumb-folder {
+  color: var(--racklyt-text-secondary);
+}
+
+.breadcrumb-title {
+  color: var(--racklyt-text-primary);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.fav-star-btn {
+  background: transparent;
+  border: none;
+  color: var(--racklyt-text-muted);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: color var(--transition-fast);
+}
+
+.fav-star-btn:hover, .fav-star-btn.starred {
+  color: var(--racklyt-yellow);
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Time Picker & Refresh Group */
+.racklyt-time-group {
+  display: flex;
+  align-items: center;
+  background-color: var(--racklyt-bg-input);
+  border: 1px solid var(--racklyt-border-weak);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.time-range-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: var(--racklyt-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  border-right: 1px solid var(--racklyt-border-weak);
+  transition: all var(--transition-fast);
+}
+
+.time-range-btn:hover {
+  background-color: var(--racklyt-bg-active);
+  color: var(--racklyt-text-primary);
+}
+
+.refresh-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  background: transparent;
+}
+
+.refresh-select {
+  background: transparent;
+  border: none;
+  color: var(--racklyt-text-secondary);
+  font-size: 12px;
+  font-family: var(--font-sans);
+  outline: none;
+  cursor: pointer;
+}
+
+.refresh-select option {
+  background-color: var(--racklyt-bg-panel);
+  color: var(--racklyt-text-primary);
+}
+
+.live-indicator-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--racklyt-green);
+  box-shadow: 0 0 6px var(--racklyt-green);
+  animation: live-pulse 1.8s infinite ease-in-out;
+}
+
+@keyframes live-pulse {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 10px var(--racklyt-green); }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+/* ====================================================
+   3. Racklyt Sub-Navbar / Variables & Action Bar
+   ==================================================== */
+.racklyt-subbar {
+  background-color: var(--racklyt-bg-header);
+  border-bottom: 1px solid var(--racklyt-border-weak);
+  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.subbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.variable-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--racklyt-bg-input);
+  border: 1px solid var(--racklyt-border-weak);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.variable-label {
+  color: var(--racklyt-text-muted);
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.variable-select {
+  background: transparent;
+  border: none;
+  color: var(--racklyt-text-primary);
+  font-weight: 600;
+  font-size: 12px;
+  outline: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+
+.variable-select option {
+  background-color: var(--racklyt-bg-panel);
+  color: var(--racklyt-text-primary);
+}
+
+.subbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Racklyt Standard Buttons */
+.rk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+  user-select: none;
+}
+
+.rk-btn-secondary {
+  background-color: var(--racklyt-bg-active);
+  border-color: var(--racklyt-border-medium);
+  color: var(--racklyt-text-primary);
+}
+
+.rk-btn-secondary:hover {
+  background-color: #2b303b;
+  border-color: var(--racklyt-border-strong);
+}
+
+.rk-btn-primary {
+  background-color: var(--racklyt-blue);
+  border-color: var(--racklyt-blue);
+  color: #ffffff;
+}
+
+.rk-btn-primary:hover {
+  background-color: var(--racklyt-blue-hover);
+}
+
+.rk-btn-orange {
+  background-color: var(--racklyt-orange);
+  border-color: var(--racklyt-orange);
+  color: #111217;
+  font-weight: 600;
+}
+
+.rk-btn-orange:hover {
+  background-color: var(--racklyt-orange-hover);
+  box-shadow: 0 0 10px var(--racklyt-orange-glow);
+}
+
+.rk-btn-danger {
+  background-color: rgba(242, 73, 92, 0.12);
+  border-color: var(--racklyt-red);
+  color: #ff6b7d;
+}
+
+.rk-btn-danger:hover {
+  background-color: var(--racklyt-red);
+  color: #ffffff;
+}
+
+.rk-btn-success {
+  background-color: rgba(115, 191, 105, 0.15);
+  border-color: var(--racklyt-green);
+  color: #8ade7b;
+}
+
+.rk-btn-success:hover {
+  background-color: var(--racklyt-green);
+  color: #ffffff;
+}
+
+.rk-btn-icon {
+  padding: 5px 7px;
+}
+
+/* ====================================================
+   3b. Live Telemetry Status Ribbon
+   ==================================================== */
+.racklyt-live-ribbon {
+  background-color: rgba(12, 13, 17, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--racklyt-border-weak);
+  padding: 5px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+.telemetry-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6.5px;
+  padding: 3px 8.5px;
+  background-color: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  font-size: 11.5px;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.02);
+}
+
+.telemetry-chip:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.telemetry-chip-icon {
+  display: flex;
+  align-items: center;
+}
+
+.telemetry-chip-label {
+  color: var(--racklyt-text-muted);
+  font-weight: 500;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.telemetry-chip-val {
+  color: var(--racklyt-text-primary);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.panel-title-icon {
+  display: flex;
+  align-items: center;
+}
+
+/* ====================================================
+   3c. Modern Explore Studio Design System
+   ==================================================== */
+.explore-studio-header {
+  background: linear-gradient(180deg, rgba(25, 28, 36, 0.95) 0%, rgba(17, 18, 23, 0.95) 100%);
+  border: 1px solid var(--racklyt-border-medium);
+  border-radius: var(--panel-radius);
+  padding: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
+}
+
+.explore-card {
+  background: var(--racklyt-bg-panel);
+  border: 1px solid var(--racklyt-border-weak);
+  border-radius: var(--panel-radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.explore-card:hover {
+  border-color: var(--racklyt-border-medium);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+
+.explore-card-accent-cpu {
+  border-top: 2px solid var(--racklyt-orange);
+}
+
+.explore-card-accent-temp {
+  border-top: 2px solid var(--racklyt-red);
+}
+
+.explore-card-accent-ram {
+  border-top: 2px solid var(--racklyt-blue);
+}
+
+.explore-card-accent-net {
+  border-top: 2px solid var(--racklyt-cyan);
+}
+
+.explore-card-accent-disk {
+  border-top: 2px solid var(--racklyt-green);
+}
+
+.explore-card-accent-docker {
+  border-top: 2px solid var(--racklyt-purple);
+}
+
+.metric-hero-value {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.core-tile {
+  background: var(--racklyt-bg-input);
+  border: 1px solid var(--racklyt-border-weak);
+  border-radius: var(--radius-sm);
+  padding: 7px 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.core-tile:hover {
+  border-color: var(--racklyt-orange);
+  background: rgba(249, 156, 28, 0.08);
+  transform: scale(1.02);
+}
+
+.core-tile.selected {
+  border-color: var(--racklyt-orange);
+  background: rgba(249, 156, 28, 0.15);
+  box-shadow: 0 0 10px rgba(249, 156, 28, 0.2);
+}
+
+.thermal-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  background: var(--racklyt-bg-input);
+  border: 1px solid var(--racklyt-border-weak);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.thermal-row:hover {
+  border-color: var(--racklyt-border-medium);
+  background: var(--racklyt-bg-active);
+}
+
+.thermal-row.selected {
+  border-color: var(--racklyt-red);
+  background: rgba(242, 73, 92, 0.12);
+  box-shadow: 0 0 10px rgba(242, 73, 92, 0.2);
+}
+
+.docker-service-tile {
+  background: var(--racklyt-bg-input);
+  border: 1px solid var(--racklyt-border-weak);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  transition: all var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.docker-service-tile:hover {
+  border-color: var(--racklyt-border-medium);
+  background: var(--racklyt-bg-active);
+}
+
+.docker-service-tile.selected {
+  border-color: var(--racklyt-purple);
+  background: rgba(184, 119, 217, 0.12);
+  box-shadow: 0 0 12px rgba(184, 119, 217, 0.25);
+}
+
+.stacked-ram-bar {
+  height: 8px;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+}
+
+/* ====================================================
+   4. Racklyt Panel Containers & Headers
+   ==================================================== */
+.panel-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--racklyt-bg-panel);
+  border: 1px solid var(--racklyt-border-weak);
+  border-radius: var(--panel-radius);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.04), 0 2px 8px rgba(0, 0, 0, 0.25);
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.panel-container:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.07), 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background-color: var(--racklyt-bg-panel);
+  border-bottom: 1px solid var(--racklyt-border-weak);
+  cursor: grab;
+  user-select: none;
+  min-height: 28px;
+}
+
+.panel-header-active {
+  cursor: grabbing;
+  background-color: var(--racklyt-bg-active);
+}
+
+.panel-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.panel-drag-handle {
+  color: var(--racklyt-text-disabled);
+  display: flex;
+  align-items: center;
+  transition: color var(--transition-fast);
+}
+
+.panel-container:hover .panel-drag-handle {
+  color: var(--racklyt-text-muted);
+}
+
+.panel-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--racklyt-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.01em;
+}
+
+.panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.panel-action-btn {
+  background: transparent;
+  border: none;
+  color: var(--racklyt-text-muted);
+  cursor: pointer;
+  padding: 3px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  transition: all var(--transition-fast);
+}
+
+.panel-action-btn:hover {
+  color: var(--racklyt-text-primary);
+  background-color: var(--racklyt-bg-active);
+}
+
+.panel-body {
+  flex: 1;
+  padding: 7px 10px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Edit Mode styling overrides */
+.edit-mode-active .panel-container {
+  border: 1px dashed var(--racklyt-orange);
+  box-shadow: 0 0 12px var(--racklyt-orange-glow);
+}
+
+/* Mouse Resize Handles for Panels (Scalable with mouse) */
+.panel-resize-handle-right {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 30;
+  user-select: none;
+  touch-action: none;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+  opacity: 0;
+}
+
+.panel-container:hover .panel-resize-handle-right,
+.edit-mode-active .panel-resize-handle-right {
+  opacity: 1;
+}
+
+.panel-resize-handle-right:hover,
+.panel-resize-handle-right.active {
+  background-color: var(--racklyt-orange);
+  box-shadow: 0 0 10px var(--racklyt-orange-glow);
+}
+
+.panel-resize-handle-corner {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: se-resize;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--racklyt-text-disabled);
+  opacity: 0;
+  transition: all 0.15s ease;
+  user-select: none;
+  touch-action: none;
+}
+
+.panel-container:hover .panel-resize-handle-corner,
+.edit-mode-active .panel-resize-handle-corner {
+  opacity: 0.7;
+}
+
+.panel-resize-handle-corner:hover,
+.panel-resize-handle-corner.active {
+  opacity: 1;
+  color: var(--racklyt-orange);
+  transform: scale(1.15);
+}
+
+.panel-resizing-active {
+  user-select: none !important;
+  border-color: var(--racklyt-orange) !important;
+  box-shadow: 0 0 14px var(--racklyt-orange-glow) !important;
+  z-index: 40 !important;
+}
+
+.panel-resize-hud {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background-color: rgba(17, 18, 23, 0.95);
+  border: 1px solid var(--racklyt-orange);
+  border-radius: 5px;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* ====================================================
+   5. Racklyt Timeseries Chart & Legend Table
+   ==================================================== */
+.chart-container {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-canvas-wrapper {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+  width: 100%;
+}
+
+/* Racklyt Signature Legend Table */
+.racklyt-legend-table {
+  width: 100%;
+  margin-top: 6px;
+  border-top: 1px solid var(--racklyt-border-weak);
+  padding-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  border-collapse: collapse;
+  flex-shrink: 0;
+}
+
+.racklyt-legend-table th {
+  color: var(--racklyt-text-disabled);
+  font-weight: 500;
+  text-align: right;
+  padding: 2px 6px;
+  font-size: 10px;
+}
+
+.racklyt-legend-table th:first-child {
+  text-align: left;
+}
+
+.racklyt-legend-table td {
+  padding: 2px 6px;
+  color: var(--racklyt-text-secondary);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.racklyt-legend-table td:first-child {
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+}
+
+.legend-color-indicator {
+  width: 10px;
+  height: 3px;
+  border-radius: 1px;
+  display: inline-block;
+}
+
+/* ====================================================
+   6. Racklyt Radial Gauge Design
+   ==================================================== */
+.gauge-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.gauge-svg-container {
+  position: relative;
+  width: 100%;
+  max-width: 240px;
+  max-height: 125px;
+  aspect-ratio: 240 / 122;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+
+/* ====================================================
+   7. Racklyt Single Stat / Big Value Panels
+   ==================================================== */
+.stat-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.stat-value {
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--racklyt-text-primary);
+  font-family: var(--font-mono);
+  line-height: 1.05;
+  word-break: break-all;
+  letter-spacing: -0.03em;
+}
+
+.stat-sparkline {
+  height: 38px;
+  width: 100%;
+  margin-top: 6px;
+}
+
+/* ====================================================
+   8. Racklyt System Information Details Card
+   ==================================================== */
+.sysinfo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 12px;
+}
+
+.sysinfo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 5px;
+}
+
+.sysinfo-key {
+  color: var(--racklyt-text-muted);
+  font-weight: 500;
+}
+
+.sysinfo-val {
+  color: var(--racklyt-text-primary);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  text-align: right;
+}
+
+/* ====================================================
+   9. Racklyt Docker Container Table Panel
+   ==================================================== */
+.docker-container-grid {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.docker-table-wrapper {
+  overflow-x: auto;
+  flex: 1;
+}
+
+.docker-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 12px;
+}
+
+.docker-table th {
+  border-bottom: 1px solid var(--racklyt-border-medium);
+  padding: 6px 10px;
+  color: var(--racklyt-text-muted);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background-color: var(--racklyt-bg-input);
+}
+
+.docker-table td {
+  border-bottom: 1px solid var(--racklyt-border-weak);
+  padding: 7px 10px;
+  vertical-align: middle;
+  font-family: var(--font-mono);
+}
+
+.docker-table tbody tr:hover {
+  background-color: var(--racklyt-bg-panel-hover);
+}
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.status-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+}
+
+.status-badge-pill.running {
+  background-color: rgba(115, 191, 105, 0.15);
+  color: #8ade7b;
+  border: 1px solid rgba(115, 191, 105, 0.3);
+}
+
+.status-badge-pill.exited {
+  background-color: rgba(242, 73, 92, 0.12);
+  color: #ff7888;
+  border: 1px solid rgba(242, 73, 92, 0.25);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-dot.running { background-color: var(--racklyt-green); box-shadow: 0 0 6px var(--racklyt-green); }
+.status-dot.exited { background-color: var(--racklyt-text-disabled); }
+
+/* Table Mini Metric Bar */
+.mini-meter-bar {
+  width: 70px;
+  height: 4px;
+  background: var(--racklyt-bg-input);
+  border-radius: 2px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+.mini-meter-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.docker-actions {
+  display: flex;
+  gap: 4px;
+}
+
+/* ====================================================
+   10. Racklyt Modal / Edit Panel Customizer
+   ==================================================== */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.custom-modal-container {
+  border: 1px solid var(--racklyt-border-medium);
+  border-radius: var(--radius-md);
+  background-color: var(--racklyt-bg-primary);
+  color: var(--racklyt-text-primary);
+  padding: 20px 24px;
+  max-width: 680px;
+  width: 92%;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85);
+  outline: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--racklyt-border-weak);
+  padding-bottom: 12px;
+}
+
+.modal-header h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--racklyt-text-primary);
+}
+
+.modal-body {
+  margin-bottom: 20px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  border-top: 1px solid var(--racklyt-border-weak);
+  padding-top: 14px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--racklyt-text-muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row > * {
+  flex: 1;
+}
+
+.text-input, .select-input {
+  background-color: var(--racklyt-bg-input);
+  border: 1px solid var(--racklyt-border-medium);
+  color: var(--racklyt-text-primary);
+  padding: 6px 10px;
+  font-size: 12.5px;
+  border-radius: var(--radius-sm);
+  outline: none;
+  font-family: var(--font-sans);
+  transition: border-color var(--transition-fast);
+}
+
+.text-input:focus, .select-input:focus {
+  border-color: var(--racklyt-orange);
+  box-shadow: 0 0 0 1px var(--racklyt-orange);
+}
+
+/* Terminal Console Modal */
+.logs-dialog-content {
+  max-width: 980px;
+  width: 95%;
+  height: 82vh;
+}
+
+.console-terminal {
+  flex: 1;
+  background-color: #050608;
+  border: 1px solid var(--racklyt-border-weak);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #70dbff;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+/* React Grid Layout Overrides */
+.react-grid-item.react-grid-placeholder {
+  background-color: var(--racklyt-orange) !important;
+  opacity: 0.18 !important;
+  border-radius: var(--panel-radius);
+  border: 1px dashed var(--racklyt-orange) !important;
+}
+
+.react-grid-item > .react-resizable-handle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  bottom: 0;
+  right: 0;
+  cursor: se-resize;
+}
+
+.react-grid-item > .react-resizable-handle::after {
+  content: "";
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 5px;
+  height: 5px;
+  border-right: 2px solid var(--racklyt-text-disabled);
+  border-bottom: 2px solid var(--racklyt-text-disabled);
+}
+
+.react-grid-item:hover > .react-resizable-handle::after {
+  border-color: var(--racklyt-text-muted);
+}
+
+.dashboard-grid-wrapper {
+  padding: 12px;
+  flex: 1;
+}
+
+/* ====================================================
+   15. Theme Customization System & Modifiers
+   ==================================================== */
+.theme-glassmorphism .panel-container,
+.theme-glassmorphism .chart-card,
+.theme-glassmorphism .racklyt-navbar,
+.theme-glassmorphism .racklyt-subbar {
+  background-color: rgba(24, 27, 31, 0.65) !important;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.theme-glow-active .panel-container:hover,
+.theme-glow-active .chart-card:hover {
+  box-shadow: 0 0 14px var(--racklyt-orange-glow, rgba(249, 156, 28, 0.25));
+  border-color: var(--racklyt-orange) !important;
+  transition: all 0.2s ease;
+}
+
+/* Density: Compact */
+.density-compact .panel-container {
+  padding: 10px !important;
+}
+.density-compact .racklyt-navbar {
+  height: 40px !important;
+}
+.density-compact .racklyt-subbar {
+  padding: 4px 12px !important;
+}
+.density-compact .chart-card {
+  padding: 8px !important;
+}
+.density-compact table td,
+.density-compact table th {
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+}
+
+/* Density: Comfortable */
+.density-comfortable .panel-container {
+  padding: 24px !important;
+}
+.density-comfortable .chart-card {
+  padding: 18px !important;
+}
+.density-comfortable table td,
+.density-comfortable table th {
+  padding: 12px 14px !important;
+  font-size: 13px !important;
+}
+
+/* Settings Studio Cards & Tile Grid */
+.settings-container {
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+.settings-tabs-bar {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--racklyt-border-weak);
+  padding-bottom: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.settings-tabs-bar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Symmetrical Grid Systems (Zero Lonely Cards) */
+.settings-grid,
+.settings-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 768px) {
+  .settings-grid,
+  .settings-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.settings-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 900px) {
+  .settings-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .settings-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.settings-presets-grid,
+.settings-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 1100px) {
+  .settings-presets-grid,
+  .settings-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .settings-presets-grid,
+  .settings-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.settings-tile {
+  background-color: var(--racklyt-bg-input);
+  border: 1px solid var(--racklyt-border-weak);
+  border-radius: var(--panel-radius, 6px);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 130px;
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.settings-tile:hover {
+  border-color: var(--racklyt-border-medium);
+}
+
+.settings-tile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.settings-tile-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--racklyt-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-tile-desc {
+  font-size: 11px;
+  color: var(--racklyt-text-muted);
+  line-height: 1.4;
+  margin-top: 8px;
+}
+
+.settings-tile-control {
+  margin: 4px 0;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+/* Global Dark Inputs for Settings Studio */
+.g-input {
+  background-color: var(--racklyt-bg-subtle) !important;
+  border: 1px solid var(--racklyt-border-medium) !important;
+  color: var(--racklyt-text-primary) !important;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  border-radius: var(--panel-radius, 4px);
+  outline: none;
+  font-family: var(--font-sans);
+  transition: all var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.g-input:focus {
+  border-color: var(--racklyt-orange) !important;
+  box-shadow: 0 0 0 1px var(--racklyt-orange) !important;
+}
+
+.g-input-mono {
+  font-family: var(--font-mono) !important;
+}
+
+select.g-input {
+  cursor: pointer;
+  background-color: var(--racklyt-bg-subtle) !important;
+  color: var(--racklyt-text-primary) !important;
+}
+
+select.g-input option {
+  background-color: #181b1f !important;
+  color: #f0f2f5 !important;
+}
+
+/* Polished Dark Custom Form Controls */
+.settings-color-picker {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 44px;
+  height: 36px;
+  border: 1px solid var(--racklyt-border-medium);
+  border-radius: var(--panel-radius, 4px);
+  background-color: var(--racklyt-bg-subtle);
+  cursor: pointer;
+  padding: 3px;
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast);
+}
+
+.settings-color-picker:hover {
+  border-color: var(--racklyt-orange);
+}
+
+.settings-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: 2px;
+}
+
+.settings-color-picker::-webkit-color-swatch {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.settings-color-picker::-moz-color-swatch {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+input[type="range"] {
+  accent-color: var(--racklyt-orange);
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--racklyt-orange);
+  cursor: pointer;
+}
+
+/* ====================================================
+   Modern Animation Polish & Micro-Interactions
+   ==================================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes beaconPulse {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0.25;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes radarSweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-beacon-pulse {
+  animation: beaconPulse 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-radar-sweep {
+  animation: radarSweep 4s linear infinite;
+}
+
+.card-interactive {
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.card-interactive:hover {
+  border-color: var(--racklyt-border-strong);
+  transform: translateY(-1px);
+}
+
+

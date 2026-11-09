@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  racklyt-agent:
+    build:
+      context: ../..
+      dockerfile: crates/racklyt-agent/Dockerfile
+    container_name: racklyt-agent
+    restart: unless-stopped
+    # Use host networking so the agent can report true physical network interface stats
+    network_mode: host
+    # Use host PID namespace to inspect true host processes and load
+    pid: host
+    environment:
+      - RACKLYT_HUB_URL=http://192.168.1.100:8443
+      - RACKLYT_AUTH_TOKEN=agent_prod_token
+      - RACKLYT_NODE_ID=docker-pve-host
+      - RACKLYT_INTERVAL_SECS=5
+    volumes:
+      - /proc:/proc:ro
+      - /sys:/sys:ro
+      - /:/host/root:ro

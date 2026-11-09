@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  hub:
+    build:
+      context: .
+      dockerfile: crates/racklyt-hub/Dockerfile
+    container_name: racklyt-hub
+    restart: unless-stopped
+    ports:
+      - "8443:8443"
+    environment:
+      - RACKLYT_HOST=0.0.0.0
+      - RACKLYT_PORT=8443
+      - RACKLYT_DB_PATH=/data/racklyt.db
+      - RACKLYT_WEB_DIST=/app/web/dist
+      - RUST_LOG=racklyt_hub=info,tower_http=info
+    volumes:
+      - racklyt_data:/data
+
+volumes:
+  racklyt_data:
+    driver: local

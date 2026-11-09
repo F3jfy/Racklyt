@@ -1,0 +1,33 @@
+[package]
+name = "racklyt-hub"
+description = "Central monitoring hub, Axum REST/WSS engine, and SQLite store for Racklyt"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+racklyt-common = { path = "../racklyt-common" }
+tokio.workspace = true
+axum = { version = "0.7", features = ["ws", "macros"] }
+tower = { version = "0.4", features = ["util"] }
+tower-http = { version = "0.5", features = ["cors", "trace", "fs"] }
+rusqlite = { version = "0.31", features = ["bundled"] }
+r2d2 = "0.8"
+r2d2_sqlite = "0.24"
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+thiserror.workspace = true
+chrono.workspace = true
+uuid.workspace = true
+argon2 = "0.5"
+rand = "0.8"
+tokio-stream = { version = "0.1", features = ["sync"] }
+futures-util = "0.3"
+rust-embed = { version = "8.5" }
+mime_guess = "2.0"
+reqwest.workspace = true
+totp-rs = { version = "6.0.0", features = ["gen_secret", "otpauth"] }
