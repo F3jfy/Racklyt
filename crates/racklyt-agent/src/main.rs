@@ -89,8 +89,7 @@ fn parse_proc_stat() -> (Option<CpuSnapshot>, Vec<CpuSnapshot>) {
                     idle: idle_all,
                 });
             }
-        } else if line.starts_with("cpu")
-            && line.chars().nth(3).is_some_and(|c| c.is_ascii_digit())
+        } else if line.starts_with("cpu") && line.chars().nth(3).is_some_and(|c| c.is_ascii_digit())
         {
             let mut parts_iter = line.split_whitespace();
             parts_iter.next();
