@@ -29,7 +29,7 @@ RUN cargo build --release -p racklyt-hub
 # ------------------------------------------------------------------------------
 FROM alpine:3.20
 
-RUN apk add --no-cache ca-certificates tzdata sqlite-libs
+RUN apk add --no-cache ca-certificates tzdata sqlite-libs procps curl
 
 WORKDIR /app
 

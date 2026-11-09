@@ -2386,8 +2386,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
       case 'storage-gauge':
         return <StorageGaugeWidget />;
 
-      case 'docker-fleet':
-        return <DockerFleetWidget />;
+      case 'docker-fleet': {
+        const targetNode = nodes.find((n) => n.id === w.config?.nodeId) || nodes[0];
+        return <DockerFleetWidget nodeId={targetNode?.id || 'production'} />;
+      }
 
       case 'proxmox-summary':
         return <ProxmoxSummaryWidget />;
@@ -2395,8 +2397,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
       case 'log-stream':
         return <LogStreamWidget />;
 
-      case 'ports-table':
-        return <PortsTableWidget />;
+      case 'ports-table': {
+        const targetNode = nodes.find((n) => n.id === w.config?.nodeId) || nodes[0];
+        return <PortsTableWidget nodeId={targetNode?.id || 'production'} />;
+      }
 
       case 'fleet-status':
         return <FleetStatusWidget nodes={nodes} />;

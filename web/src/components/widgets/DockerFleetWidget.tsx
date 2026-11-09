@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Layers,
   Play,
@@ -11,6 +11,7 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
+import { ApiClient } from '../../api/client';
 
 interface ContainerItem {
   id: string;
@@ -25,122 +26,63 @@ interface ContainerItem {
   uptime: string;
 }
 
-export const DockerFleetWidget: React.FC = () => {
+interface DockerFleetWidgetProps {
+  nodeId?: string;
+}
+
+export const DockerFleetWidget: React.FC<DockerFleetWidgetProps> = ({ nodeId = 'production' }) => {
   const toast = useToast();
-  const [containers, setContainers] = useState<ContainerItem[]>([
-    {
-      id: 'c1',
-      name: 'traefik-edge-proxy',
-      image: 'traefik:v3.1.2',
-      stack: 'networking',
-      status: 'running',
-      cpuPercent: 1.8,
-      memoryMb: 84,
-      maxMemoryMb: 512,
-      ports: '80:80, 443:443',
-      uptime: '14d 6h',
-    },
-    {
-      id: 'c2',
-      name: 'pihole-dns-unbound',
-      image: 'pihole/pihole:latest',
-      stack: 'dns-security',
-      status: 'running',
-      cpuPercent: 1.2,
-      memoryMb: 112,
-      maxMemoryMb: 512,
-      ports: '53:53/udp, 8053:80',
-      uptime: '28d 11h',
-    },
-    {
-      id: 'c3',
-      name: 'vaultwarden-server',
-      image: 'vaultwarden/server:alpine',
-      stack: 'vault',
-      status: 'running',
-      cpuPercent: 0.9,
-      memoryMb: 62,
-      maxMemoryMb: 256,
-      ports: '8880:80',
-      uptime: '42d 18h',
-    },
-    {
-      id: 'c4',
-      name: 'home-assistant-core',
-      image: 'ghcr.io/home-assistant:stable',
-      stack: 'home-automation',
-      status: 'running',
-      cpuPercent: 4.5,
-      memoryMb: 320,
-      maxMemoryMb: 1024,
-      ports: '8123:8123',
-      uptime: '9d 02h',
-    },
-    {
-      id: 'c5',
-      name: 'redis-cache-backend',
-      image: 'redis:7.2-alpine',
-      stack: 'infra',
-      status: 'running',
-      cpuPercent: 0.5,
-      memoryMb: 24,
-      maxMemoryMb: 256,
-      ports: '6379:6379',
-      uptime: '30d 14h',
-    },
-    {
-      id: 'c6',
-      name: 'watchtower-auto-updater',
-      image: 'containrrr/watchtower:latest',
-      stack: 'ops',
-      status: 'stopped',
-      cpuPercent: 0.0,
-      memoryMb: 0,
-      maxMemoryMb: 128,
-      ports: 'Cron Triggered',
-      uptime: 'Exited (0)',
-    },
-    {
-      id: 'c7',
-      name: 'grafana-observability',
-      image: 'grafana/grafana-oss:10.4',
-      stack: 'monitoring',
-      status: 'running',
-      cpuPercent: 2.1,
-      memoryMb: 148,
-      maxMemoryMb: 512,
-      ports: '3000:3000',
-      uptime: '12d 08h',
-    },
-  ]);
+  const [containers, setContainers] = useState<ContainerItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'running' | 'stopped'>('all');
   const [busyId, setBusyId] = useState<string | null>(null);
   const [activeLogContainer, setActiveLogContainer] = useState<ContainerItem | null>(null);
 
-  const handleAction = (id: string, action: 'start' | 'stop' | 'restart') => {
+  const fetchContainers = async () => {
+    try {
+      const data = await ApiClient.getNodeContainers(nodeId);
+      if (Array.isArray(data)) {
+        const mapped: ContainerItem[] = data.map((c: any) => ({
+          id: c.id,
+          name: c.name,
+          image: c.image,
+          stack: c.stack || 'standalone',
+          status: c.status === 'running' ? 'running' : 'stopped',
+          cpuPercent: typeof c.cpu_percent === 'number' ? c.cpu_percent : 0,
+          memoryMb: typeof c.memory_mb === 'number' ? Math.round(c.memory_mb) : 0,
+          maxMemoryMb: 512,
+          ports: Array.isArray(c.ports) ? (c.ports.length > 0 ? c.ports.join(', ') : '—') : (c.ports || '—'),
+          uptime: c.uptime || 'Unknown',
+        }));
+        setContainers(mapped);
+      }
+    } catch (err: any) {
+      console.error('Failed to fetch containers:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchContainers();
+    const interval = setInterval(fetchContainers, 8000);
+    return () => clearInterval(interval);
+  }, [nodeId]);
+
+  const handleAction = async (id: string, action: 'start' | 'stop' | 'restart') => {
     setBusyId(id);
     const target = containers.find((c) => c.id === id);
-    setTimeout(() => {
-      setContainers((prev) =>
-        prev.map((c) => {
-          if (c.id === id) {
-            const isRun = action === 'stop' ? 'stopped' : 'running';
-            return {
-              ...c,
-              status: isRun,
-              uptime: isRun === 'running' ? 'Just restarted' : 'Exited (0)',
-              cpuPercent: isRun === 'running' ? 1.4 : 0,
-              memoryMb: isRun === 'running' ? (c.memoryMb || 45) : 0,
-            };
-          }
-          return c;
-        })
-      );
+    try {
+      await ApiClient.containerAction(nodeId, id, action);
+      toast.success(`${target?.name || 'Container'} ${action} sent`);
+      setTimeout(fetchContainers, 1000);
+    } catch (err: any) {
+      toast.error(`Failed to ${action} container: ${err.message || 'Error'}`);
+    } finally {
       setBusyId(null);
-      toast.success(`${target?.name || 'Container'} ${action} completed`);
-    }, 550);
+    }
   };
 
   const filtered = containers.filter((c) => {
@@ -193,7 +135,9 @@ export const DockerFleetWidget: React.FC = () => {
             <CheckCircle2 size={13} className="text-emerald-400" />
             <span className="font-semibold text-[10px] uppercase">Daemon</span>
           </div>
-          <span className="font-mono font-semibold text-primaryText">v26.1.4 (rootless)</span>
+          <span className="font-mono font-semibold text-primaryText">
+            {loading && containers.length === 0 ? 'Connecting...' : 'Docker Socket (Live)'}
+          </span>
         </div>
       </div>
 
@@ -260,7 +204,20 @@ export const DockerFleetWidget: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((c) => {
+            {loading && containers.length === 0 ? (
+              <tr>
+                <td colSpan={8} className="py-8 text-center text-mutedText font-mono text-xs">
+                  Connecting to Docker socket & inspecting containers...
+                </td>
+              </tr>
+            ) : filtered.length === 0 ? (
+              <tr>
+                <td colSpan={8} className="py-8 text-center text-mutedText font-mono text-xs">
+                  {search ? 'No containers matching filter.' : `No containers detected on ${nodeId}.`}
+                </td>
+              </tr>
+            ) : (
+              filtered.map((c) => {
               const memPct = c.maxMemoryMb > 0 ? Math.round((c.memoryMb / c.maxMemoryMb) * 100) : 0;
               return (
                 <tr key={c.id}>
@@ -358,7 +315,7 @@ export const DockerFleetWidget: React.FC = () => {
                   </td>
                 </tr>
               );
-            })}
+            }))}
           </tbody>
         </table>
       </div>

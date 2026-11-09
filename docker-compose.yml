@@ -18,6 +18,8 @@ services:
       - RUST_LOG=racklyt_hub=info,tower_http=info
     volumes:
       - ./data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/host/proc:ro
 
   agent:
     build:
