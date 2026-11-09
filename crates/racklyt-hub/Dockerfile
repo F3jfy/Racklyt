@@ -14,7 +14,7 @@ RUN if [ ! -f "dist/index.html" ]; then npm ci && npm run build; fi
 # ------------------------------------------------------------------------------
 # Stage 2: Build Rust Hub Binary
 # ------------------------------------------------------------------------------
-FROM rust:1.81-alpine AS rust-builder
+FROM rust:alpine AS rust-builder
 
 RUN apk add --no-cache musl-dev
 
