@@ -8,11 +8,8 @@
 FROM node:20-alpine AS web-builder
 
 WORKDIR /app/web
-COPY web/package.json web/package-lock.json ./
-RUN npm ci
-
 COPY web/ ./
-RUN npm run build
+RUN if [ ! -f "dist/index.html" ]; then npm ci && npm run build; fi
 
 # ------------------------------------------------------------------------------
 # Stage 2: Build Rust Hub Binary
@@ -23,8 +20,7 @@ RUN apk add --no-cache musl-dev
 
 WORKDIR /app
 COPY Cargo.toml Cargo.lock ./
-COPY crates/racklyt-common ./crates/racklyt-common
-COPY crates/racklyt-hub ./crates/racklyt-hub
+COPY crates ./crates
 
 RUN cargo build --release -p racklyt-hub
 

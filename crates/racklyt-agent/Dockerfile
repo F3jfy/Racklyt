@@ -5,8 +5,7 @@ RUN apk add --no-cache musl-dev
 
 WORKDIR /app
 COPY Cargo.toml Cargo.lock ./
-COPY crates/racklyt-common ./crates/racklyt-common
-COPY crates/racklyt-agent ./crates/racklyt-agent
+COPY crates ./crates
 
 RUN cargo build --release -p racklyt-agent
 

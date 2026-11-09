@@ -8,16 +8,32 @@ services:
     container_name: racklyt-hub
     restart: unless-stopped
     ports:
-      - "8443:8443"
+      - "8088:8088"
     environment:
       - RACKLYT_HOST=0.0.0.0
-      - RACKLYT_PORT=8443
+      - RACKLYT_PORT=8088
       - RACKLYT_DB_PATH=/data/racklyt.db
       - RACKLYT_WEB_DIST=/app/web/dist
       - RUST_LOG=racklyt_hub=info,tower_http=info
     volumes:
-      - racklyt_data:/data
+      - ./data:/data
 
-volumes:
-  racklyt_data:
-    driver: local
+  agent:
+    build:
+      context: .
+      dockerfile: crates/racklyt-agent/Dockerfile
+    container_name: racklyt-agent
+    restart: unless-stopped
+    network_mode: host
+    pid: host
+    depends_on:
+      - hub
+    environment:
+      - RACKLYT_HUB_URL=http://127.0.0.1:8088
+      - RACKLYT_AUTH_TOKEN=agent_default_token
+      - RACKLYT_NODE_ID=production
+      - RACKLYT_INTERVAL_SECS=5
+    volumes:
+      - /proc:/proc:ro
+      - /sys:/sys:ro
+      - /:/host/root:ro
